@@ -50,9 +50,42 @@ if(!function_exists('mysql_query')) {
 }
 
 if(!function_exists('mysql_fetch_array')) {
-  function mysql_fetch_array($result = false, $result_type = false) {
-    if(count($result) == 1) $result = reset($result);
+  function mysql_fetch_array(&$result = false, $result_type = false) {
+    $line = array_shift($result);
+    
+    return $line;
+  }
+}
 
-    return $result;
+if(!function_exists('mysql_fetch_assoc')) {
+  function mysql_fetch_assoc(&$result = false) {
+    mysql_fetch_array($result);
+  }
+}
+
+if(!function_exists('mysql_fetch_row')) {
+  function mysql_fetch_row(&$result = false) {
+    $line = array_shift($result);
+    $line = (empty($line)) ? false : array_values($line);
+    
+    return $line;
+  }
+}
+
+if(!function_exists('mysql_num_rows')) {
+  function mysql_num_rows($result = false) {
+    $num = ($result !== false) ? count($result) : false;
+
+    return $num;
+  }
+}
+
+if(!function_exists('mysql_insert_id')) {
+  function mysql_insert_id($result = false) {
+    global $mysql;
+    
+    $id = $mysql->lastInsertId();
+
+    return $id;
   }
 }
